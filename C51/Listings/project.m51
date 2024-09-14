@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    09/14/2024  17:53:56  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    09/15/2024  04:41:06  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
@@ -34,8 +34,8 @@ LINK MAP OF MODULE:  .\Objects\project (MAIN)
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
             CODE    0000H     0003H     ABSOLUTE     
-            CODE    0003H     001EH     UNIT         ?PR?MAIN?MAIN
-                    0021H     0002H                  *** GAP ***
+            CODE    0003H     001FH     UNIT         ?PR?_LED88_SHOW_CASCADE_RED?LED88
+                    0022H     0001H                  *** GAP ***
             CODE    0023H     0003H     ABSOLUTE     
             CODE    0026H     00A7H     UNIT         ?PR?_LED88_ANIMATION?LED88
             CODE    00CDH     008CH     UNIT         ?C_C51STARTUP
@@ -47,19 +47,19 @@ LINK MAP OF MODULE:  .\Objects\project (MAIN)
             CODE    031DH     002EH     UNIT         ?PR?_LED88_WRITEBYTE?LED88
             CODE    034BH     002DH     UNIT         ?C?LIB_CODE
             CODE    0378H     0021H     UNIT         ?PR?UART_INIT?MAIN
-            CODE    0399H     001EH     UNIT         ?PR?_LED88_SHOW_CASCADE_RED?LED88
-            CODE    03B7H     001AH     UNIT         ?PR?_LED88_SHOW_CASCADE?LED88
-            CODE    03D1H     0016H     UNIT         ?PR?_LED88_SHOW_CASCADE_GREEN?LED88
-            CODE    03E7H     000BH     UNIT         ?PR?LED88_REMOVE?LED88
-            CODE    03F2H     0008H     UNIT         ?CO?LED88
-            CODE    03FAH     0005H     UNIT         ?PR?LED88_LATCH?LED88
-            CODE    03FFH     0003H     UNIT         ?PR?LED88_INIT?LED88
+            CODE    0399H     001EH     UNIT         ?PR?MAIN?MAIN
+            CODE    03B7H     001EH     UNIT         ?PR?_LED88_SHOW_CASCADE?LED88
+            CODE    03D5H     0016H     UNIT         ?PR?_LED88_SHOW_CASCADE_GREEN?LED88
+            CODE    03EBH     000BH     UNIT         ?PR?LED88_REMOVE?LED88
+            CODE    03F6H     0008H     UNIT         ?CO?LED88
+            CODE    03FEH     0005H     UNIT         ?PR?LED88_LATCH?LED88
+            CODE    0403H     0003H     UNIT         ?PR?LED88_INIT?LED88
 
 
 
 OVERLAY MAP OF MODULE:   .\Objects\project (MAIN)
 
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/14/2024  17:53:56  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/15/2024  04:41:06  PAGE 2
 
 
 
@@ -105,7 +105,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   B:00A8H.4       PUBLIC        ES
   D:00B8H         PUBLIC        IP
   B:0098H.0       PUBLIC        RI
-  C:0003H         PUBLIC        main
+  C:0399H         PUBLIC        main
   D:0008H         PUBLIC        count
   D:0099H         PUBLIC        SBUF
   D:0087H         PUBLIC        PCON
@@ -119,7 +119,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   B:0088H.6       PUBLIC        TR1
   D:000AH         PUBLIC        out
   D:00C8H         PUBLIC        T2CON
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/14/2024  17:53:56  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/15/2024  04:41:06  PAGE 3
 
 
   D:002AH         PUBLIC        Frame
@@ -159,12 +159,12 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   C:0282H         LINE#         48
   -------         ENDPROC       UART_ROUTINE
   -------         PROC          MAIN
-  C:0003H         LINE#         50
-  C:0003H         LINE#         51
-  C:0006H         LINE#         52
-  C:0009H         LINE#         54
-  C:0009H         LINE#         55
-  C:001FH         LINE#         56
+  C:0399H         LINE#         50
+  C:0399H         LINE#         51
+  C:039CH         LINE#         52
+  C:039FH         LINE#         54
+  C:039FH         LINE#         55
+  C:03B5H         LINE#         56
   -------         ENDPROC       MAIN
   -------         ENDMOD        MAIN
 
@@ -179,32 +179,32 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   B:00A0H.2       PUBLIC        DI
   D:00A8H         PUBLIC        IE
   B:00A0H.3       PUBLIC        OE
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/14/2024  17:53:56  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/15/2024  04:41:06  PAGE 4
 
 
-  C:03FAH         PUBLIC        LED88_Latch
-  C:03E7H         PUBLIC        LED88_Remove
+  C:03FEH         PUBLIC        LED88_Latch
+  C:03EBH         PUBLIC        LED88_Remove
   D:00B8H         PUBLIC        IP
   C:0159H         PUBLIC        _LED88_Animation_Green
-  C:03D8H         PUBLIC        _LED88_Show_Cascade_Green
+  C:03DCH         PUBLIC        _LED88_Show_Cascade_Green
   D:0098H         PUBLIC        SCON
   D:0088H         PUBLIC        TCON
-  C:03FFH         PUBLIC        LED88_Init
+  C:0403H         PUBLIC        LED88_Init
   C:01C8H         PUBLIC        _LED88_Animation_Red
   C:02D6H         PUBLIC        _LED88_Show
   C:0338H         PUBLIC        _LED88_WriteByte
   C:0026H         PUBLIC        _LED88_Animation
-  C:03A2H         PUBLIC        _LED88_Show_Cascade_Red
+  C:000CH         PUBLIC        _LED88_Show_Cascade_Red
   C:03C0H         PUBLIC        _LED88_Show_Cascade
-  C:03F2H         PUBLIC        row
+  C:03F6H         PUBLIC        row
   B:00A0H.0       PUBLIC        CLK
   D:00C8H         PUBLIC        T2CON
   B:00A0H.1       PUBLIC        STR
   D:00D0H         PUBLIC        PSW
   -------         PROC          LED88_INIT
-  C:03FFH         LINE#         13
-  C:03FFH         LINE#         14
-  C:0401H         LINE#         15
+  C:0403H         LINE#         13
+  C:0403H         LINE#         14
+  C:0405H         LINE#         15
   -------         ENDPROC       LED88_INIT
   C:032CH         SYMBOL        L?0028
   C:0333H         SYMBOL        L?0029
@@ -239,7 +239,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   C:0304H         LINE#         32
   C:030DH         LINE#         33
   C:030FH         LINE#         34
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/14/2024  17:53:56  PAGE 5
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/15/2024  04:41:06  PAGE 5
 
 
   C:0311H         LINE#         35
@@ -255,64 +255,64 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   -------         ENDPROC       L?0030
   C:03B7H         SYMBOL        L?0031
   -------         PROC          _LED88_SHOW_CASCADE
-  D:0006H         SYMBOL        Line_Green
+  D:0007H         SYMBOL        Line_Green
   D:0005H         SYMBOL        Line_Red
   D:0003H         SYMBOL        _row
   C:03C0H         LINE#         43
   C:03C0H         LINE#         44
-  C:03C3H         LINE#         45
-  C:03C8H         LINE#         46
+  C:03C6H         LINE#         45
+  C:03CCH         LINE#         46
   -------         ENDPROC       _LED88_SHOW_CASCADE
-  C:03D1H         SYMBOL        L?0035
+  C:03D5H         SYMBOL        L?0035
   -------         PROC          L?0034
   -------         ENDPROC       L?0034
-  C:03D1H         SYMBOL        L?0035
+  C:03D5H         SYMBOL        L?0035
   -------         PROC          _LED88_SHOW_CASCADE_GREEN
   D:0007H         SYMBOL        Line_Green
   D:0005H         SYMBOL        _row
-  C:03D8H         LINE#         49
-  C:03D8H         LINE#         50
-  C:03DBH         LINE#         51
-  C:03DEH         LINE#         52
+  C:03DCH         LINE#         49
+  C:03DCH         LINE#         50
+  C:03DFH         LINE#         51
+  C:03E2H         LINE#         52
   -------         ENDPROC       _LED88_SHOW_CASCADE_GREEN
-  C:0399H         SYMBOL        L?0033
+  C:0003H         SYMBOL        L?0033
   -------         PROC          L?0032
   -------         ENDPROC       L?0032
-  C:0399H         SYMBOL        L?0033
+  C:0003H         SYMBOL        L?0033
   -------         PROC          _LED88_SHOW_CASCADE_RED
   D:0004H         SYMBOL        Line_Red
   D:0005H         SYMBOL        _row
-  C:03A2H         LINE#         55
-  C:03A4H         LINE#         56
-  C:03A9H         LINE#         57
-  C:03AEH         LINE#         58
+  C:000CH         LINE#         55
+  C:000EH         LINE#         56
+  C:0013H         LINE#         57
+  C:0019H         LINE#         58
   -------         ENDPROC       _LED88_SHOW_CASCADE_RED
   -------         PROC          LED88_REMOVE
-  C:03E7H         LINE#         61
-  C:03E7H         LINE#         62
-  C:03E7H         LINE#         63
-  C:03E7H         LINE#         64
-  C:03E7H         LINE#         65
-  C:03E7H         LINE#         66
-  C:03E7H         LINE#         67
-  C:03EAH         LINE#         68
-  C:03EAH         LINE#         69
-  C:03EAH         LINE#         70
-  C:03EAH         LINE#         71
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/14/2024  17:53:56  PAGE 6
+  C:03EBH         LINE#         61
+  C:03EBH         LINE#         62
+  C:03EBH         LINE#         63
+  C:03EBH         LINE#         64
+  C:03EBH         LINE#         65
+  C:03EBH         LINE#         66
+  C:03EBH         LINE#         67
+  C:03EEH         LINE#         68
+  C:03EEH         LINE#         69
+  C:03EEH         LINE#         70
+  C:03EEH         LINE#         71
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/15/2024  04:41:06  PAGE 6
 
 
-  C:03EAH         LINE#         72
-  C:03EAH         LINE#         73
-  C:03EDH         LINE#         74
-  C:03EFH         LINE#         75
-  C:03F1H         LINE#         76
+  C:03EEH         LINE#         72
+  C:03EEH         LINE#         73
+  C:03F1H         LINE#         74
+  C:03F3H         LINE#         75
+  C:03F5H         LINE#         76
   -------         ENDPROC       LED88_REMOVE
   -------         PROC          LED88_LATCH
-  C:03FAH         LINE#         78
-  C:03FAH         LINE#         79
-  C:03FCH         LINE#         80
-  C:03FEH         LINE#         81
+  C:03FEH         LINE#         78
+  C:03FEH         LINE#         79
+  C:0400H         LINE#         80
+  C:0402H         LINE#         81
   -------         ENDPROC       LED88_LATCH
   -------         PROC          _LED88_ANIMATION
   D:004AH         SYMBOL        Green
@@ -359,7 +359,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   C:019CH         LINE#         106
   C:01A8H         LINE#         107
   C:01B4H         LINE#         108
-BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/14/2024  17:53:56  PAGE 7
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  09/15/2024  04:41:06  PAGE 7
 
 
   C:01C0H         LINE#         109
@@ -396,5 +396,5 @@ SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
   C:034BH         PUBLIC        ?C?CLDOPTR
   -------         ENDMOD        ?C?CLDOPTR
 
-Program Size: data=112.0 xdata=0 code=1024
+Program Size: data=112.0 xdata=0 code=1029
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

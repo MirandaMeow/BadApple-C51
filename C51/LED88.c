@@ -41,20 +41,20 @@ void LED88_Show(uchar *Line_Green, uchar *Line_Red) {
 }
 
 void LED88_Show_Cascade(uchar Line_Green, uchar Line_Red, uchar _row) {
-    LED88_WriteByte(Line_Green);
-    LED88_WriteByte(Line_Red);
+    LED88_WriteByte(~Line_Green);
+    LED88_WriteByte(~Line_Red);
     LED88_WriteByte(row[_row]);
 }
 
 void LED88_Show_Cascade_Green(uchar Line_Green, uchar _row) {
-    LED88_WriteByte(Line_Green);
+    LED88_WriteByte(~Line_Green);
     LED88_WriteByte(0xFF);
     LED88_WriteByte(row[_row]);
 }
 
 void LED88_Show_Cascade_Red(uchar Line_Red, uchar _row) {
     LED88_WriteByte(0xFF);
-    LED88_WriteByte(Line_Red);
+    LED88_WriteByte(~Line_Red);
     LED88_WriteByte(row[_row]);
 }
 
