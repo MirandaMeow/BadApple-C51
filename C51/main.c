@@ -11,7 +11,7 @@ uchar Frame[32] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-uchar out[32] = {
+uchar Out[32] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
@@ -32,27 +32,32 @@ void Uart_Init() {  //9600bps@11.0592MHz
     ES = 1;
 }
 
-void UART_Routine() interrupt 4 {
+void Copy_Array(uchar *array1, uchar *array2) {
     uint i;
+    for (i = 0; i < 32; i++) {
+        array1[i] = array2[i];
+    }
+}
+
+void UART_Routine() interrupt 4 {
     if (RI == 1) {
         RI = 0;
         Frame[count] = SBUF;
         count++;
         if (count >= 32) {
             count = 0;
-            for (i = 0; i < 32; i++) {
-                out[i] = Frame[i];
-            }
+            Copy_Array(Out, Frame);
         }
     }
 }
+
 
 void main() {
     Uart_Init();
     LED88_Init();
 
     while (1) {
-        LED88_Animation(out, out, 0);
+        LED88_Animation(Out, Out, 0);
     };
 }
 
