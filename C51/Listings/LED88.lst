@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 04:41:06 PAGE 1   
+C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:00:32 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LED88
@@ -62,7 +62,7 @@ line level    source
   51   1          LED88_WriteByte(0xFF);
   52   1          LED88_WriteByte(row[_row]);
   53   1      }
-C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 04:41:06 PAGE 2   
+C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:00:32 PAGE 2   
 
   54          
   55          void LED88_Show_Cascade_Red(uchar Line_Red, uchar _row) {
@@ -126,7 +126,7 @@ line level    source
  113          void LED88_Animation_Red(uchar *Red, frame) {
  114   1          uchar i, cascade4, cascade3, cascade2, cascade1;
  115   1          for (i = 0; i < 8; i++) {
-C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 04:41:06 PAGE 3   
+C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:00:32 PAGE 3   
 
  116   2              cascade4 = i * 2 + 17 + frame * 32;
  117   2              cascade3 = i * 2 + 16 + frame * 32;
