@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:00:32 PAGE 1   
+C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:23:35 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LED88
@@ -14,131 +14,188 @@ line level    source
    3          #define uint unsigned int
    4          #define uchar unsigned char
    5          
-   6          sbit OE = P2 ^ 3;
-   7          sbit DI = P2 ^ 2;
-   8          sbit STR = P2 ^ 1;
-   9          sbit CLK = P2 ^ 0;
-  10          
-  11          uchar code row[] = {0xfe, 0xfd, 0xfb, 0xf7, 0xef, 0xdf, 0xbf, 0x7f};
-  12          
-  13          void LED88_Init() {
-  14   1          OE = 0;
-  15   1      }
-  16          
-  17          void LED88_WriteByte(uchar LED_DATA) {
-  18   1          uchar i;
-  19   1          for (i = 0; i < 8; i++) {
-  20   2              DI = LED_DATA & 0x80;
-  21   2              LED_DATA <<= 1;
-  22   2              CLK = 1;
-  23   2              CLK = 0;
-  24   2          }
-  25   1      }
-  26          
-  27          void LED88_Show(uchar *Line_Green, uchar *Line_Red) {
+   6          //引脚配置：
+   7          sbit OE = P2 ^ 3;
+   8          sbit DI = P2 ^ 2;
+   9          sbit STR = P2 ^ 1;
+  10          sbit CLK = P2 ^ 0;
+  11          
+  12          uchar code Row_Hex[] = {0xfe, 0xfd, 0xfb, 0xf7, 0xef, 0xdf, 0xbf, 0x7f};
+  13          
+  14          //函数定义：
+  15          /** @brief  初始化 LED 点阵屏，使能低电平为启用
+  16            * @param  无
+  17            * @retval 无
+  18            */
+  19          void LED88_Init() {
+  20   1          OE = 0;
+  21   1      }
+  22          
+  23          /** @brief  向 74HC595 写入数据
+  24            * @param  LED_DATA 写入的数据，1 比特
+  25            * @retval 无
+  26            */
+  27          void LED88_WriteByte(uchar LED_DATA) {
   28   1          uchar i;
   29   1          for (i = 0; i < 8; i++) {
-  30   2              LED88_WriteByte(~Line_Green[i]);
-  31   2              LED88_WriteByte(~Line_Red[i]);
-  32   2              LED88_WriteByte(row[i]);
-  33   2              STR = 1;
-  34   2              STR = 0;
-  35   2              LED88_WriteByte(0xFF);
-  36   2              LED88_WriteByte(0xFF);
-  37   2              LED88_WriteByte(0xFF);
-  38   2              STR = 1;
-  39   2              STR = 0;
-  40   2          }
-  41   1      }
-  42          
-  43          void LED88_Show_Cascade(uchar Line_Green, uchar Line_Red, uchar _row) {
-  44   1          LED88_WriteByte(~Line_Green);
-  45   1          LED88_WriteByte(~Line_Red);
-  46   1          LED88_WriteByte(row[_row]);
-  47   1      }
-  48          
-  49          void LED88_Show_Cascade_Green(uchar Line_Green, uchar _row) {
-  50   1          LED88_WriteByte(~Line_Green);
-  51   1          LED88_WriteByte(0xFF);
-  52   1          LED88_WriteByte(row[_row]);
-  53   1      }
-C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:00:32 PAGE 2   
+  30   2              DI = LED_DATA & 0x80;
+  31   2              LED_DATA <<= 1;
+  32   2              CLK = 1;
+  33   2              CLK = 0;
+  34   2          }
+  35   1      }
+  36          
+  37          /** @brief  显示一帧画面，传入的 Line_Green 和 Line_Red 必须为长度为 32 的数组，每个元素为 1 比特数据
+  38            * @param  Line_Green 绿色灯数据
+  39            * @param  Line_Red 红色灯数据
+  40            * @retval 无
+  41            */
+  42          void LED88_Show(uchar *Line_Green, uchar *Line_Red) {
+  43   1          uchar i;
+  44   1          for (i = 0; i < 8; i++) {
+  45   2              LED88_WriteByte(~Line_Green[i]);
+  46   2              LED88_WriteByte(~Line_Red[i]);
+  47   2              LED88_WriteByte(Row_Hex[i]);
+  48   2              STR = 1;
+  49   2              STR = 0;
+  50   2              LED88_WriteByte(0xFF);
+  51   2              LED88_WriteByte(0xFF);
+  52   2              LED88_WriteByte(0xFF);
+  53   2              STR = 1;
+C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:23:35 PAGE 2   
 
-  54          
-  55          void LED88_Show_Cascade_Red(uchar Line_Red, uchar _row) {
-  56   1          LED88_WriteByte(0xFF);
-  57   1          LED88_WriteByte(~Line_Red);
-  58   1          LED88_WriteByte(row[_row]);
-  59   1      }
-  60          
-  61          void LED88_Remove() {
-  62   1          LED88_WriteByte(0xFF);
-  63   1          LED88_WriteByte(0xFF);
-  64   1          LED88_WriteByte(0xFF);
-  65   1          LED88_WriteByte(0xFF);
-  66   1          LED88_WriteByte(0xFF);
-  67   1          LED88_WriteByte(0xFF);
-  68   1          LED88_WriteByte(0xFF);
-  69   1          LED88_WriteByte(0xFF);
-  70   1          LED88_WriteByte(0xFF);
-  71   1          LED88_WriteByte(0xFF);
-  72   1          LED88_WriteByte(0xFF);
-  73   1          LED88_WriteByte(0xFF);
-  74   1          STR = 1;
-  75   1          STR = 0;
-  76   1      }
-  77          
-  78          void LED88_Latch() {
-  79   1          STR = 1;
-  80   1          STR = 0;
-  81   1      }
-  82          
-  83          void LED88_Animation(uchar *Green, uchar *Red, frame) {
-  84   1          uchar i, cascade4, cascade3, cascade2, cascade1;
-  85   1          for (i = 0; i < 8; i++) {
-  86   2              cascade4 = i * 2 + 17 + frame * 32;
-  87   2              cascade3 = i * 2 + 16 + frame * 32;
-  88   2              cascade2 = i * 2 + 1 + frame * 32;
-  89   2              cascade1 = i * 2 + frame * 32;
-  90   2              LED88_Show_Cascade(Green[cascade4], Red[cascade4], i);
-  91   2              LED88_Show_Cascade(Green[cascade3], Red[cascade3], i);
-  92   2              LED88_Show_Cascade(Green[cascade2], Red[cascade2], i);
-  93   2              LED88_Show_Cascade(Green[cascade1], Red[cascade1], i);
-  94   2              LED88_Latch();
-  95   2          }
-  96   1      }
-  97          
-  98          void LED88_Animation_Green(uchar *Green, frame) {
-  99   1          uchar i, cascade4, cascade3, cascade2, cascade1;
- 100   1          for (i = 0; i < 8; i++) {
- 101   2              cascade4 = i * 2 + 17 + frame * 32;
- 102   2              cascade3 = i * 2 + 16 + frame * 32;
- 103   2              cascade2 = i * 2 + 1 + frame * 32;
- 104   2              cascade1 = i * 2 + frame * 32;
- 105   2              LED88_Show_Cascade_Green(Green[cascade4], i);
- 106   2              LED88_Show_Cascade_Green(Green[cascade3], i);
- 107   2              LED88_Show_Cascade_Green(Green[cascade2], i);
- 108   2              LED88_Show_Cascade_Green(Green[cascade1], i);
- 109   2              LED88_Latch();
- 110   2          }
+  54   2              STR = 0;
+  55   2          }
+  56   1      }
+  57          
+  58          /** @brief  级联时写入单个 74HC595 的数据
+  59            * @param  Line_Green 绿色灯数据
+  60            * @param  Line_Green 绿色灯数据
+  61            * @param  Row 行号
+  62            * @retval 
+  63            */
+  64          void LED88_Show_Cascade(uchar Line_Green, uchar Line_Red, uchar Row) {
+  65   1          LED88_WriteByte(~Line_Green);
+  66   1          LED88_WriteByte(~Line_Red);
+  67   1          LED88_WriteByte(Row_Hex[Row]);
+  68   1      }
+  69          
+  70          /** @brief  级联时写入单个 74HC595 的数据，只显示绿色
+  71            * @param  Line_Green 绿色灯数据
+  72            * @param  Row 行号
+  73            * @retval 
+  74            */
+  75          void LED88_Show_Cascade_Green(uchar Line_Green, uchar Row) {
+  76   1          LED88_WriteByte(~Line_Green);
+  77   1          LED88_WriteByte(0xFF);
+  78   1          LED88_WriteByte(Row_Hex[Row]);
+  79   1      }
+  80          
+  81          /** @brief  级联时写入单个 74HC595 的数据，只显示红色
+  82            * @param  Line_Red 红色灯数据
+  83            * @param  Row 行号
+  84            * @retval 
+  85            */
+  86          void LED88_Show_Cascade_Red(uchar Line_Red, uchar Row) {
+  87   1          LED88_WriteByte(0xFF);
+  88   1          LED88_WriteByte(~Line_Red);
+  89   1          LED88_WriteByte(Row_Hex[Row]);
+  90   1      }
+  91          
+  92          /** @brief  在级联后消影，可能会造成闪烁
+  93            * @param  无
+  94            * @retval 无
+  95            */
+  96          void LED88_Remove_Shadow() {
+  97   1          LED88_WriteByte(0xFF);
+  98   1          LED88_WriteByte(0xFF);
+  99   1          LED88_WriteByte(0xFF);
+ 100   1          LED88_WriteByte(0xFF);
+ 101   1          LED88_WriteByte(0xFF);
+ 102   1          LED88_WriteByte(0xFF);
+ 103   1          LED88_WriteByte(0xFF);
+ 104   1          LED88_WriteByte(0xFF);
+ 105   1          LED88_WriteByte(0xFF);
+ 106   1          LED88_WriteByte(0xFF);
+ 107   1          LED88_WriteByte(0xFF);
+ 108   1          LED88_WriteByte(0xFF);
+ 109   1          STR = 1;
+ 110   1          STR = 0;
  111   1      }
  112          
- 113          void LED88_Animation_Red(uchar *Red, frame) {
- 114   1          uchar i, cascade4, cascade3, cascade2, cascade1;
- 115   1          for (i = 0; i < 8; i++) {
-C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:00:32 PAGE 3   
+ 113          /** @brief  将移位寄存器的数据锁存
+ 114            * @param  无
+ 115            * @retval 无
+C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:23:35 PAGE 3   
 
- 116   2              cascade4 = i * 2 + 17 + frame * 32;
- 117   2              cascade3 = i * 2 + 16 + frame * 32;
- 118   2              cascade2 = i * 2 + 1 + frame * 32;
- 119   2              cascade1 = i * 2 + frame * 32;
- 120   2              LED88_Show_Cascade_Red(Red[cascade4], i);
- 121   2              LED88_Show_Cascade_Red(Red[cascade3], i);
- 122   2              LED88_Show_Cascade_Red(Red[cascade2], i);
- 123   2              LED88_Show_Cascade_Red(Red[cascade1], i);
- 124   2              LED88_Latch();
- 125   2          }
- 126   1      }
+ 116            */
+ 117          void LED88_Latch() {
+ 118   1          STR = 1;
+ 119   1          STR = 0;
+ 120   1      }
+ 121          
+ 122          /** @brief  播放动画
+ 123            * @param  Green 长度为 32 的倍数的数组，每个元素为 1 比特数据，为绿色灯数据
+ 124            * @param  Red 长度为 32 的倍数的数组，每个元素为 1 比特数据，为红色灯数据
+ 125            * @param  frame 当前帧
+ 126            * @retval 无
+ 127            */
+ 128          void LED88_Animation(uchar *Green, uchar *Red, Frame) {
+ 129   1          uchar i, cascade4, cascade3, cascade2, cascade1;
+ 130   1          for (i = 0; i < 8; i++) {
+ 131   2              cascade4 = i * 2 + 17 + Frame * 32;
+ 132   2              cascade3 = i * 2 + 16 + Frame * 32;
+ 133   2              cascade2 = i * 2 + 1 + Frame * 32;
+ 134   2              cascade1 = i * 2 + Frame * 32;
+ 135   2              LED88_Show_Cascade(Green[cascade4], Red[cascade4], i);
+ 136   2              LED88_Show_Cascade(Green[cascade3], Red[cascade3], i);
+ 137   2              LED88_Show_Cascade(Green[cascade2], Red[cascade2], i);
+ 138   2              LED88_Show_Cascade(Green[cascade1], Red[cascade1], i);
+ 139   2              LED88_Latch();
+ 140   2          }
+ 141   1      }
+ 142          
+ 143          /** @brief  播放动画，只显示绿色
+ 144            * @param  Green 长度为 32 的倍数的数组，每个元素为 1 比特数据，为绿色灯数据
+ 145            * @param  frame 当前帧
+ 146            * @retval 无
+ 147            */
+ 148          void LED88_Animation_Green(uchar *Green, Frame) {
+ 149   1          uchar i, cascade4, cascade3, cascade2, cascade1;
+ 150   1          for (i = 0; i < 8; i++) {
+ 151   2              cascade4 = i * 2 + 17 + Frame * 32;
+ 152   2              cascade3 = i * 2 + 16 + Frame * 32;
+ 153   2              cascade2 = i * 2 + 1 + Frame * 32;
+ 154   2              cascade1 = i * 2 + Frame * 32;
+ 155   2              LED88_Show_Cascade_Green(Green[cascade4], i);
+ 156   2              LED88_Show_Cascade_Green(Green[cascade3], i);
+ 157   2              LED88_Show_Cascade_Green(Green[cascade2], i);
+ 158   2              LED88_Show_Cascade_Green(Green[cascade1], i);
+ 159   2              LED88_Latch();
+ 160   2          }
+ 161   1      }
+ 162          
+ 163          /** @brief  播放动画，只显示红色
+ 164            * @param  Red 长度为 32 的倍数的数组，每个元素为 1 比特数据，为红色灯数据
+ 165            * @param  frame 当前帧
+ 166            * @retval 无
+ 167            */
+ 168          void LED88_Animation_Red(uchar *Red, Frame) {
+ 169   1          uchar i, cascade4, cascade3, cascade2, cascade1;
+ 170   1          for (i = 0; i < 8; i++) {
+ 171   2              cascade4 = i * 2 + 17 + Frame * 32;
+ 172   2              cascade3 = i * 2 + 16 + Frame * 32;
+ 173   2              cascade2 = i * 2 + 1 + Frame * 32;
+ 174   2              cascade1 = i * 2 + Frame * 32;
+ 175   2              LED88_Show_Cascade_Red(Red[cascade4], i);
+ 176   2              LED88_Show_Cascade_Red(Red[cascade3], i);
+ 177   2              LED88_Show_Cascade_Red(Red[cascade2], i);
+C51 COMPILER V9.60.7.0   LED88                                                             09/15/2024 05:23:35 PAGE 4   
+
+ 178   2              LED88_Show_Cascade_Red(Red[cascade1], i);
+ 179   2              LED88_Latch();
+ 180   2          }
+ 181   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              09/15/2024 05:00:58 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              09/15/2024 05:22:26 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -15,65 +15,83 @@ line level    source
    4          #define uint unsigned int
    5          #define uchar unsigned char
    6          
-   7          uint count;
-   8          
-   9          uchar Frame[32] = {
-  10              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  11              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  12          };
-  13          
-  14          uchar Out[32] = {
-  15              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  16              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-  17          };
-  18          
-  19          // 初始化串口
-  20          void Uart_Init() {  //9600bps@11.0592MHz
-  21   1          PCON &= 0x7F;       //波特率不倍速
-  22   1          SCON = 0x50;        //8位数据,可变波特率
-  23   1          AUXR &= 0xBF;       //定时器时钟12T模式
-  24   1          AUXR &= 0xFE;       //串口1选择定时器1为波特率发生器
-  25   1          TMOD &= 0x0F;       //设置定时器模式
-  26   1          TMOD |= 0x20;       //设置定时器模式
-  27   1          TL1 = 0xFD;         //设置定时初始值
-  28   1          TH1 = 0xFD;         //设置定时重载值
-  29   1          ET1 = 0;            //禁止定时器中断
-  30   1          TR1 = 1;            //定时器1开始计时
-  31   1          EA = 1;
-  32   1          ES = 1;
-  33   1      }
-  34          
-  35          void Copy_Array(uchar *array1, uchar *array2) {
-  36   1          uint i;
-  37   1          for (i = 0; i < 32; i++) {
-  38   2              array1[i] = array2[i];
-  39   2          }
-  40   1      }
-  41          
-  42          void UART_Routine() interrupt 4 {
-  43   1          if (RI == 1) {
-  44   2              RI = 0;
-  45   2              Frame[count] = SBUF;
-  46   2              count++;
-  47   2              if (count >= 32) {
-  48   3                  count = 0;
-  49   3                  Copy_Array(Out, Frame);
-  50   3              }
-  51   2          }
-  52   1      }
-  53          
-C51 COMPILER V9.60.7.0   MAIN                                                              09/15/2024 05:00:58 PAGE 2   
+   7          // 帧计数
+   8          uint count;
+   9          
+  10          // 帧缓存
+  11          uchar Frame[32] = {
+  12              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  13              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  14          };
+  15          
+  16          // 实际用来显示的帧
+  17          uchar Out[32] = {
+  18              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  19              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  20          };
+  21          
+  22          /** @brief  串口初始化，波特率为 9600
+  23            * @param  无
+  24            * @retval 无
+  25            */
+  26          void Uart_Init() {
+  27   1          PCON &= 0x7F;
+  28   1          SCON = 0x50;
+  29   1          AUXR &= 0xBF;
+  30   1          AUXR &= 0xFE;
+  31   1          TMOD &= 0x0F;
+  32   1          TMOD |= 0x20;
+  33   1          TL1 = 0xFD;
+  34   1          TH1 = 0xFD;
+  35   1          ET1 = 0; 
+  36   1          TR1 = 1;
+  37   1          EA = 1;
+  38   1          ES = 1;
+  39   1      }
+  40          
+  41          /** @brief  复制数组
+  42            * @param  array1  目标数组
+  43            * @param  array2  原数组
+  44            * @retval 无
+  45            */
+  46          void Copy_Array(uchar *array1, uchar *array2) {
+  47   1          uint i;
+  48   1          for (i = 0; i < 32; i++) {
+  49   2              array1[i] = array2[i];
+  50   2          }
+  51   1      }
+  52          
+  53          /** @brief  串口中断函数，每收到 32 字节就更新一次帧数据
+C51 COMPILER V9.60.7.0   MAIN                                                              09/15/2024 05:22:26 PAGE 2   
 
-  54          
-  55          void main() {
-  56   1          Uart_Init();
-  57   1          LED88_Init();
-  58   1      
-  59   1          while (1) {
-  60   2              LED88_Animation(Out, Out, 0);
-  61   2          };
-  62   1      }
-  63          
+  54            * @param  无
+  55            * @retval 无
+  56            */
+  57          void UART_Routine() interrupt 4 {
+  58   1          if (RI == 1) {
+  59   2              RI = 0;
+  60   2              Frame[count] = SBUF;
+  61   2              count++;
+  62   2              if (count >= 32) {
+  63   3                  count = 0;
+  64   3                  Copy_Array(Out, Frame);
+  65   3              }
+  66   2          }
+  67   1      }
+  68          
+  69          /** @brief  主函数，显示帧数据
+  70            * @param  无
+  71            * @retval 无
+  72            */
+  73          void main() {
+  74   1          Uart_Init();
+  75   1          LED88_Init();
+  76   1      
+  77   1          while (1) {
+  78   2              LED88_Animation(Out, Out, 0);
+  79   2          };
+  80   1      }
+  81          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE

@@ -4,34 +4,45 @@
 #define uint unsigned int
 #define uchar unsigned char
 
+// 帧计数
 uint count;
 
+// 帧缓存
 uchar Frame[32] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
+// 实际用来显示的帧
 uchar Out[32] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 
-// 初始化串口
-void Uart_Init() {  //9600bps@11.0592MHz
-    PCON &= 0x7F;       //波特率不倍速
-    SCON = 0x50;        //8位数据,可变波特率
-    AUXR &= 0xBF;       //定时器时钟12T模式
-    AUXR &= 0xFE;       //串口1选择定时器1为波特率发生器
-    TMOD &= 0x0F;       //设置定时器模式
-    TMOD |= 0x20;       //设置定时器模式
-    TL1 = 0xFD;         //设置定时初始值
-    TH1 = 0xFD;         //设置定时重载值
-    ET1 = 0;            //禁止定时器中断
-    TR1 = 1;            //定时器1开始计时
+/** @brief  串口初始化，波特率为 9600
+  * @param  无
+  * @retval 无
+  */
+void Uart_Init() {
+    PCON &= 0x7F;
+    SCON = 0x50;
+    AUXR &= 0xBF;
+    AUXR &= 0xFE;
+    TMOD &= 0x0F;
+    TMOD |= 0x20;
+    TL1 = 0xFD;
+    TH1 = 0xFD;
+    ET1 = 0; 
+    TR1 = 1;
     EA = 1;
     ES = 1;
 }
 
+/** @brief  复制数组
+  * @param  array1  目标数组
+  * @param  array2  原数组
+  * @retval 无
+  */
 void Copy_Array(uchar *array1, uchar *array2) {
     uint i;
     for (i = 0; i < 32; i++) {
@@ -39,6 +50,10 @@ void Copy_Array(uchar *array1, uchar *array2) {
     }
 }
 
+/** @brief  串口中断函数，每收到 32 字节就更新一次帧数据
+  * @param  无
+  * @retval 无
+  */
 void UART_Routine() interrupt 4 {
     if (RI == 1) {
         RI = 0;
@@ -51,7 +66,10 @@ void UART_Routine() interrupt 4 {
     }
 }
 
-
+/** @brief  主函数，显示帧数据
+  * @param  无
+  * @retval 无
+  */
 void main() {
     Uart_Init();
     LED88_Init();
