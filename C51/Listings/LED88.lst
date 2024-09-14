@@ -1,0 +1,155 @@
+C51 COMPILER V9.60.7.0   LED88                                                             09/14/2024 17:53:56 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LED88
+OBJECT MODULE PLACED IN .\Objects\LED88.obj
+COMPILER INVOKED BY: D:\Softwares\Keil_v5\C51\BIN\C51.EXE LED88.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Li
+                    -stings\LED88.lst) OBJECT(.\Objects\LED88.obj)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF LED88.c: SERIAL NUMBER EXPIRED
+   1          #include <STC89C5xRC.H>
+   2          
+   3          #define uint unsigned int
+   4          #define uchar unsigned char
+   5          
+   6          sbit OE = P2 ^ 3;
+   7          sbit DI = P2 ^ 2;
+   8          sbit STR = P2 ^ 1;
+   9          sbit CLK = P2 ^ 0;
+  10          
+  11          uchar code row[] = {0xfe, 0xfd, 0xfb, 0xf7, 0xef, 0xdf, 0xbf, 0x7f};
+  12          
+  13          void LED88_Init() {
+  14   1          OE = 0;
+  15   1      }
+  16          
+  17          void LED88_WriteByte(uchar LED_DATA) {
+  18   1          uchar i;
+  19   1          for (i = 0; i < 8; i++) {
+  20   2              DI = LED_DATA & 0x80;
+  21   2              LED_DATA <<= 1;
+  22   2              CLK = 1;
+  23   2              CLK = 0;
+  24   2          }
+  25   1      }
+  26          
+  27          void LED88_Show(uchar *Line_Green, uchar *Line_Red) {
+  28   1          uchar i;
+  29   1          for (i = 0; i < 8; i++) {
+  30   2              LED88_WriteByte(~Line_Green[i]);
+  31   2              LED88_WriteByte(~Line_Red[i]);
+  32   2              LED88_WriteByte(row[i]);
+  33   2              STR = 1;
+  34   2              STR = 0;
+  35   2              LED88_WriteByte(0xFF);
+  36   2              LED88_WriteByte(0xFF);
+  37   2              LED88_WriteByte(0xFF);
+  38   2              STR = 1;
+  39   2              STR = 0;
+  40   2          }
+  41   1      }
+  42          
+  43          void LED88_Show_Cascade(uchar Line_Green, uchar Line_Red, uchar _row) {
+  44   1          LED88_WriteByte(Line_Green);
+  45   1          LED88_WriteByte(Line_Red);
+  46   1          LED88_WriteByte(row[_row]);
+  47   1      }
+  48          
+  49          void LED88_Show_Cascade_Green(uchar Line_Green, uchar _row) {
+  50   1          LED88_WriteByte(~Line_Green);
+  51   1          LED88_WriteByte(0xFF);
+  52   1          LED88_WriteByte(row[_row]);
+  53   1      }
+C51 COMPILER V9.60.7.0   LED88                                                             09/14/2024 17:53:56 PAGE 2   
+
+  54          
+  55          void LED88_Show_Cascade_Red(uchar Line_Red, uchar _row) {
+  56   1          LED88_WriteByte(0xFF);
+  57   1          LED88_WriteByte(Line_Red);
+  58   1          LED88_WriteByte(row[_row]);
+  59   1      }
+  60          
+  61          void LED88_Remove() {
+  62   1          LED88_WriteByte(0xFF);
+  63   1          LED88_WriteByte(0xFF);
+  64   1          LED88_WriteByte(0xFF);
+  65   1          LED88_WriteByte(0xFF);
+  66   1          LED88_WriteByte(0xFF);
+  67   1          LED88_WriteByte(0xFF);
+  68   1          LED88_WriteByte(0xFF);
+  69   1          LED88_WriteByte(0xFF);
+  70   1          LED88_WriteByte(0xFF);
+  71   1          LED88_WriteByte(0xFF);
+  72   1          LED88_WriteByte(0xFF);
+  73   1          LED88_WriteByte(0xFF);
+  74   1          STR = 1;
+  75   1          STR = 0;
+  76   1      }
+  77          
+  78          void LED88_Latch() {
+  79   1          STR = 1;
+  80   1          STR = 0;
+  81   1      }
+  82          
+  83          void LED88_Animation(uchar *Green, uchar *Red, frame) {
+  84   1          uchar i, cascade4, cascade3, cascade2, cascade1;
+  85   1          for (i = 0; i < 8; i++) {
+  86   2              cascade4 = i * 2 + 17 + frame * 32;
+  87   2              cascade3 = i * 2 + 16 + frame * 32;
+  88   2              cascade2 = i * 2 + 1 + frame * 32;
+  89   2              cascade1 = i * 2 + frame * 32;
+  90   2              LED88_Show_Cascade(Green[cascade4], Red[cascade4], i);
+  91   2              LED88_Show_Cascade(Green[cascade3], Red[cascade3], i);
+  92   2              LED88_Show_Cascade(Green[cascade2], Red[cascade2], i);
+  93   2              LED88_Show_Cascade(Green[cascade1], Red[cascade1], i);
+  94   2              LED88_Latch();
+  95   2          }
+  96   1      }
+  97          
+  98          void LED88_Animation_Green(uchar *Green, frame) {
+  99   1          uchar i, cascade4, cascade3, cascade2, cascade1;
+ 100   1          for (i = 0; i < 8; i++) {
+ 101   2              cascade4 = i * 2 + 17 + frame * 32;
+ 102   2              cascade3 = i * 2 + 16 + frame * 32;
+ 103   2              cascade2 = i * 2 + 1 + frame * 32;
+ 104   2              cascade1 = i * 2 + frame * 32;
+ 105   2              LED88_Show_Cascade_Green(Green[cascade4], i);
+ 106   2              LED88_Show_Cascade_Green(Green[cascade3], i);
+ 107   2              LED88_Show_Cascade_Green(Green[cascade2], i);
+ 108   2              LED88_Show_Cascade_Green(Green[cascade1], i);
+ 109   2              LED88_Latch();
+ 110   2          }
+ 111   1      }
+ 112          
+ 113          void LED88_Animation_Red(uchar *Red, frame) {
+ 114   1          uchar i, cascade4, cascade3, cascade2, cascade1;
+ 115   1          for (i = 0; i < 8; i++) {
+C51 COMPILER V9.60.7.0   LED88                                                             09/14/2024 17:53:56 PAGE 3   
+
+ 116   2              cascade4 = i * 2 + 17 + frame * 32;
+ 117   2              cascade3 = i * 2 + 16 + frame * 32;
+ 118   2              cascade2 = i * 2 + 1 + frame * 32;
+ 119   2              cascade1 = i * 2 + frame * 32;
+ 120   2              LED88_Show_Cascade_Red(Red[cascade4], i);
+ 121   2              LED88_Show_Cascade_Red(Red[cascade3], i);
+ 122   2              LED88_Show_Cascade_Red(Red[cascade2], i);
+ 123   2              LED88_Show_Cascade_Red(Red[cascade1], i);
+ 124   2              LED88_Latch();
+ 125   2          }
+ 126   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    602    ----
+   CONSTANT SIZE    =      8    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      37
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

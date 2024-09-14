@@ -1,0 +1,227 @@
+C51 COMPILER V9.60.7.0   LCD1602                                                           09/13/2024 20:21:13 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LCD1602
+OBJECT MODULE PLACED IN .\Objects\LCD1602.obj
+COMPILER INVOKED BY: D:\Softwares\Keil_v5\C51\BIN\C51.EXE LCD1602.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\
+                    -Listings\LCD1602.lst) OBJECT(.\Objects\LCD1602.obj)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF LCD1602.c: SERIAL NUMBER EXPIRED
+   1          #include <STC89C5xRC.H>
+   2          
+   3          //引脚配置：
+   4          sbit LCD_RS = P3 ^ 5;
+   5          sbit LCD_RW = P3 ^ 6;
+   6          sbit LCD_EN = P3 ^ 4;
+   7          #define LCD_DataPort P0
+   8          
+   9          //函数定义：
+  10          /**
+  11            * @brief  LCD1602延时函数，12MHz调用可延时1ms
+  12            * @param  无
+  13            * @retval 无
+  14            */
+  15          void LCD_Delay() {
+  16   1          unsigned char i, j;
+  17   1      
+  18   1          i = 2;
+  19   1          j = 239;
+  20   1          do {
+  21   2              while (--j);
+  22   2          } while (--i);
+  23   1      }
+  24          
+  25          /**
+  26            * @brief  LCD1602写命令
+  27            * @param  Command 要写入的命令
+  28            * @retval 无
+  29            */
+  30          void LCD_WriteCommand(unsigned char Command) {
+  31   1          LCD_RS = 0;
+  32   1          LCD_RW = 0;
+  33   1          LCD_EN = 0;
+  34   1          LCD_DataPort = Command;
+  35   1          LCD_EN = 1;
+  36   1          LCD_Delay();
+  37   1          LCD_EN = 0;
+  38   1          LCD_Delay();
+  39   1      }
+  40          
+  41          /**
+  42            * @brief  LCD1602写数据
+  43            * @param  Data 要写入的数据
+  44            * @retval 无
+  45            */
+  46          void LCD_WriteData(unsigned char Data) {
+  47   1          LCD_RS = 1;
+  48   1          LCD_RW = 0;
+  49   1          LCD_DataPort = Data;
+  50   1          LCD_EN = 1;
+  51   1          LCD_Delay();
+  52   1          LCD_EN = 0;
+  53   1          LCD_Delay();
+C51 COMPILER V9.60.7.0   LCD1602                                                           09/13/2024 20:21:13 PAGE 2   
+
+  54   1      }
+  55          
+  56          /**
+  57            * @brief  LCD1602设置光标位置
+  58            * @param  Line 行位置，范围：1~2
+  59            * @param  Column 列位置，范围：1~16
+  60            * @retval 无
+  61            */
+  62          void LCD_SetCursor(unsigned char Line, unsigned char Column) {
+  63   1          if(Line == 1) {
+  64   2              LCD_WriteCommand(0x80 | (Column - 1));
+  65   2          } else if(Line == 2) {
+  66   2              LCD_WriteCommand(0x80 | (Column - 1 + 0x40));
+  67   2          }
+  68   1      }
+  69          
+  70          /**
+  71            * @brief  返回值=X的Y次方
+  72            */
+  73          int LCD_Pow(int X, int Y) {
+  74   1          unsigned char i;
+  75   1          int Result = 1;
+  76   1          for(i = 0; i < Y; i++) {
+  77   2              Result *= X;
+  78   2          }
+  79   1          return Result;
+  80   1      }
+  81          
+  82          /**
+  83            * @brief  LCD1602初始化函数
+  84            * @param  无
+  85            * @retval 无
+  86            */
+  87          void LCD_Init() {
+  88   1          LCD_WriteCommand(0x38);//八位数据接口，两行显示，5*7点阵
+  89   1          LCD_WriteCommand(0x0c);//显示开，光标关，闪烁关
+  90   1          LCD_WriteCommand(0x06);//数据读写操作后，光标自动加一，画面不动
+  91   1          LCD_WriteCommand(0x01);//光标复位，清屏
+  92   1      }
+  93          
+  94          /**
+  95            * @brief  在LCD1602指定位置上显示一个字符
+  96            * @param  Line 行位置，范围：1~2
+  97            * @param  Column 列位置，范围：1~16
+  98            * @param  Char 要显示的字符
+  99            * @retval 无
+ 100            */
+ 101          void LCD_ShowChar(unsigned char Line, unsigned char Column, char Char) {
+ 102   1          LCD_SetCursor(Line, Column);
+ 103   1          LCD_WriteData(Char);
+ 104   1      }
+ 105          
+ 106          /**
+ 107            * @brief  在LCD1602指定位置开始显示所给字符串
+ 108            * @param  Line 起始行位置，范围：1~2
+ 109            * @param  Column 起始列位置，范围：1~16
+ 110            * @param  String 要显示的字符串
+ 111            * @retval 无
+ 112            */
+ 113          void LCD_ShowString(unsigned char Line, unsigned char Column, char *String) {
+ 114   1          unsigned char i;
+ 115   1          LCD_SetCursor(Line, Column);
+C51 COMPILER V9.60.7.0   LCD1602                                                           09/13/2024 20:21:13 PAGE 3   
+
+ 116   1          for(i = 0; String[i] != '\0'; i++) {
+ 117   2              LCD_WriteData(String[i]);
+ 118   2          }
+ 119   1      }
+ 120          
+ 121          /**
+ 122            * @brief  在LCD1602指定位置开始显示所给数字
+ 123            * @param  Line 起始行位置，范围：1~2
+ 124            * @param  Column 起始列位置，范围：1~16
+ 125            * @param  Number 要显示的数字，范围：0~65535
+ 126            * @param  Length 要显示数字的长度，范围：1~5
+ 127            * @retval 无
+ 128            */
+ 129          void LCD_ShowNum(unsigned char Line, unsigned char Column, unsigned int Number, unsigned char Length) {
+ 130   1          unsigned char i;
+ 131   1          LCD_SetCursor(Line, Column);
+ 132   1          for(i = Length; i > 0; i--) {
+ 133   2              LCD_WriteData(Number / LCD_Pow(10, i - 1) % 10 + '0');
+ 134   2          }
+ 135   1      }
+ 136          
+ 137          /**
+ 138            * @brief  在LCD1602指定位置开始以有符号十进制显示所给数字
+ 139            * @param  Line 起始行位置，范围：1~2
+ 140            * @param  Column 起始列位置，范围：1~16
+ 141            * @param  Number 要显示的数字，范围：-32768~32767
+ 142            * @param  Length 要显示数字的长度，范围：1~5
+ 143            * @retval 无
+ 144            */
+ 145          void LCD_ShowSignedNum(unsigned char Line, unsigned char Column, int Number, unsigned char Length) {
+ 146   1          unsigned char i;
+ 147   1          unsigned int Number1;
+ 148   1          LCD_SetCursor(Line, Column);
+ 149   1          if(Number >= 0) {
+ 150   2              LCD_WriteData('+');
+ 151   2              Number1 = Number;
+ 152   2          } else {
+ 153   2              LCD_WriteData('-');
+ 154   2              Number1 = -Number;
+ 155   2          }
+ 156   1          for(i = Length; i > 0; i--) {
+ 157   2              LCD_WriteData(Number1 / LCD_Pow(10, i - 1) % 10 + '0');
+ 158   2          }
+ 159   1      }
+ 160          
+ 161          /**
+ 162            * @brief  在LCD1602指定位置开始以十六进制显示所给数字
+ 163            * @param  Line 起始行位置，范围：1~2
+ 164            * @param  Column 起始列位置，范围：1~16
+ 165            * @param  Number 要显示的数字，范围：0~0xFFFF
+ 166            * @param  Length 要显示数字的长度，范围：1~4
+ 167            * @retval 无
+ 168            */
+ 169          void LCD_ShowHexNum(unsigned char Line, unsigned char Column, unsigned int Number, unsigned char Length) {
+ 170   1          unsigned char i, SingleNumber;
+ 171   1          LCD_SetCursor(Line, Column);
+ 172   1          for(i = Length; i > 0; i--) {
+ 173   2              SingleNumber = Number / LCD_Pow(16, i - 1) % 16;
+ 174   2              if(SingleNumber < 10) {
+ 175   3                  LCD_WriteData(SingleNumber + '0');
+ 176   3              } else {
+ 177   3                  LCD_WriteData(SingleNumber - 10 + 'A');
+C51 COMPILER V9.60.7.0   LCD1602                                                           09/13/2024 20:21:13 PAGE 4   
+
+ 178   3              }
+ 179   2          }
+ 180   1      }
+ 181          
+ 182          /**
+ 183            * @brief  在LCD1602指定位置开始以二进制显示所给数字
+ 184            * @param  Line 起始行位置，范围：1~2
+ 185            * @param  Column 起始列位置，范围：1~16
+ 186            * @param  Number 要显示的数字，范围：0~1111 1111 1111 1111
+ 187            * @param  Length 要显示数字的长度，范围：1~16
+ 188            * @retval 无
+ 189            */
+ 190          void LCD_ShowBinNum(unsigned char Line, unsigned char Column, unsigned int Number, unsigned char Length) {
+ 191   1          unsigned char i;
+ 192   1          LCD_SetCursor(Line, Column);
+ 193   1          for(i = Length; i > 0; i--) {
+ 194   2              LCD_WriteData(Number / LCD_Pow(2, i - 1) % 2 + '0');
+ 195   2          }
+ 196   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    401    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      29
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

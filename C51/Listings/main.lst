@@ -1,0 +1,85 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              09/14/2024 17:53:22 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Softwares\Keil_v5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Lis
+                    -tings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF main.c: SERIAL NUMBER EXPIRED
+   1          #include <STC89C5xRC.H>
+   2          #include "LED88.h"
+   3          
+   4          #define uint unsigned int
+   5          #define uchar unsigned char
+   6          
+   7          uint count;
+   8          
+   9          uchar Frame[32] = {
+  10              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  11              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  12          };
+  13          
+  14          uchar out[32] = {
+  15              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  16              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  17          };
+  18          
+  19          // 初始化串口
+  20          void Uart_Init() {  //9600bps@11.0592MHz
+  21   1          PCON &= 0x7F;       //波特率不倍速
+  22   1          SCON = 0x50;        //8位数据,可变波特率
+  23   1          AUXR &= 0xBF;       //定时器时钟12T模式
+  24   1          AUXR &= 0xFE;       //串口1选择定时器1为波特率发生器
+  25   1          TMOD &= 0x0F;       //设置定时器模式
+  26   1          TMOD |= 0x20;       //设置定时器模式
+  27   1          TL1 = 0xFD;         //设置定时初始值
+  28   1          TH1 = 0xFD;         //设置定时重载值
+  29   1          ET1 = 0;            //禁止定时器中断
+  30   1          TR1 = 1;            //定时器1开始计时
+  31   1          EA = 1;
+  32   1          ES = 1;
+  33   1      }
+  34          
+  35          void UART_Routine() interrupt 4 {
+  36   1          uint i;
+  37   1          if (RI == 1) {
+  38   2              RI = 0;
+  39   2              Frame[count] = SBUF;
+  40   2              count++;
+  41   2              if (count >= 32) {
+  42   3                  count = 0;
+  43   3                  for (i = 0; i < 32; i++) {
+  44   4                      out[i] = Frame[i];
+  45   4                  }
+  46   3              }
+  47   2          }
+  48   1      }
+  49          
+  50          void main() {
+  51   1          Uart_Init();
+  52   1          LED88_Init();
+  53   1      
+C51 COMPILER V9.60.7.0   MAIN                                                              09/14/2024 17:53:22 PAGE 2   
+
+  54   1          while (1) {
+  55   2              LED88_Animation(out, out, 0);
+  56   2          };
+  57   1      }
+  58          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    152    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     66    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
